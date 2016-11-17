@@ -4,8 +4,8 @@ import codecs
 import json
 import os
 import re
-from time import sleep
 from threading import Lock
+from time import sleep
 
 try:  # Python 2
     from urllib2 import urlopen, Request, URLError
@@ -107,37 +107,37 @@ def load():
     }
 
 
-def write(data):
-    with codecs.open(settings.DB, encoding='utf-8', mode='wb+',) as fp:
+def write(path, data):
+    with codecs.open(path, encoding='utf-8', mode='wb+',) as fp:
         json.dump(data, fp)
 
 
-def read():
-    with codecs.open(settings.DB, encoding='utf-8', mode='rb',) as fp:
+def read(path):
+    with codecs.open(path, encoding='utf-8', mode='rb',) as fp:
         return json.load(fp)
 
 
-def exist():
-    return os.path.isfile(settings.DB)
+def exist(path):
+    return os.path.isfile(path)
 
 
-def rm():
-    if exist():
-        os.remove(settings.DB)
+def rm(path):
+    if exist(path):
+        os.remove(path)
 
 
-def update():
-    if exist():
-        rm()
+def update(path):
+    if exist(path):
+        rm(path)
 
-    write(load())
+    write(path, load())
 
 
-def load_cached():
-    if not exist():
-        update()
+def load_cached(path):
+    if not exist(path):
+        update(path)
 
-    return read()
+    return read(path)
 
 
 from fake_useragent import settings  # noqa # isort:skip

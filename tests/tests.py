@@ -4,9 +4,9 @@ from fake_useragent import settings
 from fake_useragent import utils
 
 
-def clear():
+def clear(path=settings.DB):
     try:
-        os.unlink(settings.DB)
+        os.unlink(path)
     except OSError:
         pass
 
@@ -73,17 +73,17 @@ def test_load():
 
 
 def test_write():
-    clear()
+    clear(settings.DB)
 
     assert not os.path.isfile(settings.DB)
 
-    utils.write(fake_useragent_dict)
+    utils.write(settings.DB, fake_useragent_dict)
 
     assert os.path.isfile(settings.DB)
 
 
 def test_read():
-    data = utils.read()
+    data = utils.read(settings.DB)
 
     check_dict(data)
 
@@ -91,38 +91,38 @@ def test_read():
 
 
 def test_exists():
-    assert utils.exist()
+    assert utils.exist(settings.DB)
 
 
 def test_rm():
-    assert utils.exist()
-    utils.rm()
-    assert not utils.exist()
+    assert utils.exist(settings.DB)
+    utils.rm(settings.DB)
+    assert not utils.exist(settings.DB)
 
 
 def test_update():
-    assert not utils.exist()
-    utils.update()
-    assert utils.exist()
-    utils.update()
-    assert utils.exist()
+    assert not utils.exist(settings.DB)
+    utils.update(settings.DB)
+    assert utils.exist(settings.DB)
+    utils.update(settings.DB)
+    assert utils.exist(settings.DB)
 
 
 def test_load_cached():
-    data = utils.load_cached()
+    data = utils.load_cached(settings.DB)
 
     check_dict(data)
 
-    clear()
+    clear(settings.DB)
 
-    data = utils.load_cached()
+    data = utils.load_cached(settings.DB)
 
     check_dict(data)
 
 
 def test_user_agent():
-    clear()
-    assert not utils.exist()
+    clear(settings.DB)
+    assert not utils.exist(settings.DB)
 
     ua = UserAgent(cache=False)
 
@@ -155,20 +155,20 @@ def test_user_agent():
     assert data1 == data2
     assert data1 is not data2
 
-    clear()
+    clear(settings.DB)
     del ua
 
     ua = UserAgent()
 
-    assert utils.exist()
+    assert utils.exist(settings.DB)
 
     data1 = ua.data
 
-    clear()
+    clear(settings.DB)
 
     ua.update()
 
-    assert utils.exist()
+    assert utils.exist(settings.DB)
 
     data2 = ua.data
 

@@ -63,7 +63,13 @@ Usage
 Notes
 -----
 
-``fake-useragent`` store collected data at your os temp dir, like ``/tmp``
+``fake-useragent`` stores collected data in your OS temp dir, like ``/tmp``. You can also specify the location yourself with the keyword argument ``path`` to ``UserAgent``. It should be an absolute path to a file.
+
+.. code-block:: python
+
+    from fake_useragent import UserAgent
+    ua = UserAgent(path='/Users/me/useragents.json')
+
 
 if you want to update saved database just
 

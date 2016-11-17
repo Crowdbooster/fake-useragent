@@ -10,15 +10,16 @@ from fake_useragent.utils import load, load_cached, update
 class UserAgent(object):
     lock = Lock()  # mutable cross-instance threading.Lock
 
-    def __init__(self, cache=True):
+    def __init__(self, cache=True, path=settings.DB):
         self.cache = cache
+        self.path = path
 
         with self.lock:
             self.load()
 
     def load(self):
         if self.cache:
-            self.data = load_cached()
+            self.data = load_cached(self.path)
         else:
             self.data = load()
 
@@ -27,7 +28,7 @@ class UserAgent(object):
             self.cache = cache
 
         if self.cache:
-            update()
+            update(self.path)
 
         self.load()
 
